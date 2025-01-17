@@ -1,0 +1,31 @@
+﻿<Window x:Class="SurftugaWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SurftugaWpf"
+        mc:Ignorable="d"
+        Title="SurftugaWPF" Height="540" Width="960" KeyDown="Window_KeyDown"
+        Focusable="True">
+
+    <Window.Resources>
+        <!-- Recursos para los fondos -->
+        <ImageBrush x:Key="MenuBackground" ImageSource="pack://application:,,,/assets/surftugaMenu.png" />
+        <ImageBrush x:Key="GameBackground" ImageSource="pack://application:,,,/assets/surftugaFondo.png" />
+    </Window.Resources>
+
+    <Grid KeyDown="Window_KeyDown">
+        <!-- Menú inicial -->
+        <Grid x:Name="MenuScene" Visibility="visible" Background="{StaticResource MenuBackground}">
+
+        </Grid>
+
+        <!-- Fondo del juego -->
+        <Grid x:Name="GameScene" Visibility="hidden" Background="{StaticResource GameBackground}">
+            <Image x:Name="TortugaImage" Source="assets/Tortuga idle.png" Width="193" Height="208" 
+           HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="24,0,0,64" RenderTransformOrigin="0.48,0.035" />
+
+        </Grid>
+    </Grid>
+</Window>
+
