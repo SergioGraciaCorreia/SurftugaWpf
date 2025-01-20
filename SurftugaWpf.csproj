@@ -37,6 +37,9 @@
     <Resource Include="assets\Tortuga idle.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Content Include="assets\tortugaSalto.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="assets\Tortuga salto.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

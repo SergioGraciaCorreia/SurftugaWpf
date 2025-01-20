@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SurftugaWpf"
         mc:Ignorable="d"
         Title="SurftugaWPF" Height="540" Width="960" KeyDown="Window_KeyDown"
+        ResizeMode="NoResize" WindowStyle="SingleBorderWindow"
         Focusable="True">
 
     <Window.Resources>
@@ -16,16 +17,17 @@
 
     <Grid KeyDown="Window_KeyDown">
         <!-- Menú inicial -->
-        <Grid x:Name="MenuScene" Visibility="visible" Background="{StaticResource MenuBackground}">
-
+        <Grid x:Name="MenuScene" Visibility="Visible" Background="{StaticResource MenuBackground}">
         </Grid>
 
-        <!-- Fondo del juego -->
-        <Grid x:Name="GameScene" Visibility="hidden" Background="{StaticResource GameBackground}">
-            <Image x:Name="TortugaImage" Source="assets/Tortuga idle.png" Width="193" Height="208" 
-           HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="24,0,0,64" RenderTransformOrigin="0.48,0.035" />
-
+        <!-- Fondo del juego usando Canvas -->
+        <Grid x:Name="GameScene" Visibility="Hidden" Background="{StaticResource GameBackground}">
+            <Canvas Name="GameCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Image x:Name="TortugaImage" Source="assets/Tortuga idle.png" Width="193" Height="208"
+                       Canvas.Left="50" Canvas.Top="250" />
+            </Canvas>
         </Grid>
     </Grid>
 </Window>
+
 
