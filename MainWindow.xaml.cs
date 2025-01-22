@@ -18,6 +18,7 @@ namespace SurftugaWpf
 		private bool isIdleFrame1 = true;        // Controla qué frame mostrar
 		private MediaPlayer backgroundMediaPlayer; // MediaPlayer para el sonido de fondo
 		private MediaPlayer jumpMediaPlayer;     // MediaPlayer para el sonido de salto
+		private MediaPlayer songMediaPlayer;     // MediaPlayer para la canción de fondo
 		private double originalYPosition;       // Posición original de la tortuga
 		private bool canJump = true;            // Indica si se puede realizar un salto
 		private DispatcherTimer cooldownTimer;  // Temporizador para manejar el enfriamiento
@@ -51,6 +52,11 @@ namespace SurftugaWpf
 				jumpMediaPlayer = new MediaPlayer();
 				jumpMediaPlayer.Open(new Uri("assets/tortugaSalto.mp3", UriKind.Relative));
 				jumpMediaPlayer.Volume = 0.2; // Ajusta el volumen si es necesario
+
+				// Inicializar MediaPlayer para la canción de fondo
+				songMediaPlayer = new MediaPlayer();
+				songMediaPlayer.Open(new Uri("assets/song.mp3", UriKind.Relative));
+				songMediaPlayer.Volume = 0.2; // Ajusta el volumen si es necesario
 			}
 			catch (Exception ex)
 			{
@@ -65,6 +71,13 @@ namespace SurftugaWpf
 				// Cambiar entre las escenas
 				MenuScene.Visibility = Visibility.Hidden; // Oculta el menú
 				GameScene.Visibility = Visibility.Visible; // Muestra el fondo del juego
+				songMediaPlayer.Play(); // Reproducir la canción de fondo
+				// Configurar el sonido en bucle
+				songMediaPlayer.MediaEnded += (sender, e) =>
+				{
+					songMediaPlayer.Position = TimeSpan.Zero; // Reiniciar el sonido
+					songMediaPlayer.Play();
+				};
 				GameScene.UpdateLayout();
 				TortugaImage.UpdateLayout();
 
