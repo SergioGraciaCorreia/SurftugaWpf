@@ -9,10 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\Pajaro ataque.png" />
+    <None Remove="assets\Pajaro idle.png" />
+    <None Remove="assets\Pulpo ataque.png" />
+    <None Remove="assets\Pulpo idle.png" />
     <None Remove="assets\seaSound.mp3" />
     <None Remove="assets\song.mp3" />
     <None Remove="assets\surftugaFondo.png" />
     <None Remove="assets\surftugaMenu.png" />
+    <None Remove="assets\Tiburon Ataque.png" />
     <None Remove="assets\Tortuga agachada.png" />
     <None Remove="assets\Tortuga idle 2.png" />
     <None Remove="assets\Tortuga idle.png" />
@@ -26,10 +31,28 @@
     <Content Include="assets\song.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="assets\Pajaro ataque.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\Pajaro idle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\Pulpo ataque.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\Pulpo idle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="assets\surftugaFondo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\surftugaMenu.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\Tiburon Ataque.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\Tiburon idle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\Tortuga agachada.png">
