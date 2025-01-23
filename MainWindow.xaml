@@ -21,7 +21,14 @@
         </Grid>
 
         <!-- Fondo del juego usando Canvas -->
-        <Grid x:Name="GameScene" Visibility="Hidden" Background="{StaticResource GameBackground}">
+        <Grid x:Name="GameScene" Visibility="Hidden">
+            <!-- Fondo en movimiento -->
+            <Canvas x:Name="FondoMovimiento">
+                <Image x:Name="FondoImage1" Source="pack://application:,,,/assets/surftugaFondo.png" Width="960" Height="540" Loaded="FondoImage_Loaded" />
+                <Image x:Name="FondoImage2" Source="pack://application:,,,/assets/surftugaFondo.png" Width="960" Height="540" Loaded="FondoImage_Loaded" />
+            </Canvas>
+
+            <!-- Capa de objetos (tortuga y obstáculos) -->
             <Canvas Name="GameCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Image x:Name="TortugaImage" Source="assets/Tortuga idle.png" Width="193" Height="208"
                        Canvas.Left="50" Canvas.Top="250" />
