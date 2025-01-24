@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Remove="assets\Pajaro ataque.png" />
     <None Remove="assets\Pajaro idle.png" />
+    <None Remove="assets\PressStart2P-Regular.ttf" />
     <None Remove="assets\Pulpo ataque.png" />
     <None Remove="assets\Pulpo idle.png" />
     <None Remove="assets\seaSound.mp3" />
@@ -35,6 +36,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\Pajaro idle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="assets\PressStart2P-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\Pulpo ataque.png">

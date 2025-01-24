@@ -27,6 +27,8 @@ namespace SurftugaWpf
 		private MediaPlayer jumpMediaPlayer;     // MediaPlayer para el sonido de salto
 		private MediaPlayer songMediaPlayer;     // MediaPlayer para la canción de fondo
 		private Random random = new Random(); // Generador de números aleatorios
+		private int puntuacion = 0; // Variable para almacenar la puntuación
+		private double tiempoAcumuladoPuntuacion = 0; // Variable para acumular el tiempo
 		private int tiempoEntreObstaculosMin = 750; // Tiempo mínimo entre obstáculos (en ms)
 		private int tiempoEntreObstaculosMax = 1500; // Tiempo máximo entre obstáculos (en ms)
 		private int tiempoEntreObstaculos; // Tiempo actual entre obstáculos
@@ -48,10 +50,6 @@ namespace SurftugaWpf
 			RenderOptions.SetEdgeMode(FondoMovimiento, EdgeMode.Aliased);
 			RenderOptions.SetBitmapScalingMode(GameCanvas, BitmapScalingMode.HighQuality);
 			RenderOptions.SetEdgeMode(GameCanvas, EdgeMode.Aliased);
-
-			// Posicionar las imágenes del fondo una al lado de la otra
-			Canvas.SetLeft(FondoImage1, 0);
-			Canvas.SetLeft(FondoImage2, FondoImage1.ActualWidth); // Coloca la segunda imagen justo después de la primera
 		
 
 			// Configurar el temporizador de animación
@@ -109,6 +107,21 @@ namespace SurftugaWpf
 
 			// Mover obstáculos
 			MoverObstaculos(deltaTime);
+
+			// Incrementar la puntuación cada segundo (1000ms)
+			tiempoAcumuladoPuntuacion += deltaTime;
+			if (tiempoAcumuladoPuntuacion >= 1000) // Cada 1000ms (1 segundo)
+			{
+				puntuacion += 1; // Aumentar la puntuación en 5 puntos cada segundo
+				ActualizarPuntuacion();
+				tiempoAcumuladoPuntuacion = 0; // Reiniciar el contador
+			}
+		}
+
+		private void ActualizarPuntuacion()
+		{
+			// Actualizar el TextBlock con la puntuación actual
+			PuntuacionText.Text = $"SCORE: {puntuacion}";
 		}
 
 		private void MoverFondo(double deltaTime)
@@ -200,6 +213,10 @@ namespace SurftugaWpf
 		{
 			if (e.Key == Key.Enter && !isGameRunning) // Solo iniciar si el juego no está en ejecución
 			{
+				// Reiniciar la puntuación
+				puntuacion = 0;
+				ActualizarPuntuacion();
+
 				// Cambiar entre las escenas
 				MenuScene.Visibility = Visibility.Hidden; // Oculta el menú
 				GameScene.Visibility = Visibility.Visible; // Muestra el fondo del juego
@@ -209,7 +226,12 @@ namespace SurftugaWpf
 				animationTimer.Start(); // Iniciar el temporizador de animación
 
 				songMediaPlayer.Play(); // Reproducir la canción de fondo
-
+				// Configurar la canción en bucle
+				songMediaPlayer.MediaEnded += (sender, e) =>
+				{
+					songMediaPlayer.Position = TimeSpan.Zero; // Reiniciar la canción
+					songMediaPlayer.Play();
+				};
 				// Generar el primer obstáculo manualmente
 				SpawnObstaculo("assets/Pulpo idle.png");
 
