@@ -30,8 +30,23 @@
 
             <!-- Capa de objetos (tortuga y obstáculos) -->
             <Canvas Name="GameCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <!-- Tortuga -->
                 <Image x:Name="TortugaImage" Source="assets/Tortuga idle.png" Width="193" Height="208"
-                       Canvas.Left="50" Canvas.Top="250" />
+           Canvas.Left="50" Canvas.Top="250" />
+
+                <!-- TextBlock para mostrar la puntuación -->
+                <TextBlock x:Name="PuntuacionText" 
+           Canvas.Left="600" Canvas.Top="25" 
+           FontSize="30" FontWeight="Bold" Foreground="Yellow" 
+           FontFamily="pack://application:,,,/assets/PressStart2P-Regular.ttf#Press Start 2P" 
+           Text="SCORE: 0">
+                    <TextBlock.Effect>
+                        <DropShadowEffect ShadowDepth="0" 
+                          Color="#FFA500" 
+                          Opacity="1" 
+                          BlurRadius="5" />
+                    </TextBlock.Effect>
+                </TextBlock>
             </Canvas>
         </Grid>
     </Grid>
