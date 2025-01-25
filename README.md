@@ -1,6 +1,6 @@
-SurftugaWPF
+SURFTUGA WPF
 
-¡Bienvenido a SurftugaWPF! Este es un juego simple desarrollado en WPF (Windows Presentation Foundation) donde controlas a una tortuga surfera que debe esquivar obstáculos mientras el fondo se mueve cada vez más rápido.
+¡Bienvenido a Surftuga WPF! Este es un juego simple desarrollado en WPF (Windows Presentation Foundation) donde controlas a una tortuga surfera que debe esquivar obstáculos mientras el fondo se mueve cada vez más rápido.
 
 Descripción del juego
 El objetivo del juego es sobrevivir el mayor tiempo posible, esquivando obstáculos que aparecen aleatoriamente. La velocidad del fondo aumenta con el tiempo, lo que hace que el juego sea cada vez más desafiante. ¡Consigue la mayor puntuación posible!
