@@ -15,24 +15,25 @@ namespace SurftugaWpf
 {
 	public partial class MainWindow : Window
 	{
-		private DispatcherTimer animationTimer;  // Temporizador para la animación
-		private DispatcherTimer cooldownTimer;  // Temporizador para manejar el enfriamiento
-		private double velocidadFondo = 1; // Velocidad de desplazamiento del fondo
-		private double incrementoVelocidad = 0.01; // Incremento de velocidad por cada tick
-		private bool isIdleFrame1 = true;        // Controla qué frame mostrar
-		private bool canJump = true;            // Indica si se puede realizar un salto
-		private bool isGameRunning = false; // Controla si el juego está en ejecución
-		private double originalYPosition;       // Posición original de la tortuga
-		private MediaPlayer backgroundMediaPlayer; // MediaPlayer para el sonido de fondo
-		private MediaPlayer jumpMediaPlayer;     // MediaPlayer para el sonido de salto
-		private MediaPlayer songMediaPlayer;     // MediaPlayer para la canción de fondo
-		private Random random = new Random(); // Generador de números aleatorios
-		private int puntuacion = 0; // Variable para almacenar la puntuación
-		private double tiempoAcumuladoPuntuacion = 0; // Variable para acumular el tiempo
-		private int tiempoEntreObstaculosMin = 750; // Tiempo mínimo entre obstáculos (en ms)
-		private int tiempoEntreObstaculosMax = 1500; // Tiempo máximo entre obstáculos (en ms)
-		private int tiempoEntreObstaculos; // Tiempo actual entre obstáculos
-		private double tiempoTranscurrido = 0; // Tiempo transcurrido desde el último obstáculo
+		// Campos y propiedades
+		private DispatcherTimer animationTimer;
+		private DispatcherTimer cooldownTimer;
+		private double velocidadFondo = 1;
+		private double incrementoVelocidad = 0.01;
+		private bool isIdleFrame1 = true;
+		private bool canJump = true;
+		private bool isGameRunning = false;
+		private double originalYPosition;
+		private MediaPlayer backgroundMediaPlayer;
+		private MediaPlayer jumpMediaPlayer;
+		private MediaPlayer songMediaPlayer;
+		private Random random = new Random();
+		private int puntuacion = 0;
+		private double tiempoAcumuladoPuntuacion = 0;
+		private int tiempoEntreObstaculosMin = 750;
+		private int tiempoEntreObstaculosMax = 1500;
+		private int tiempoEntreObstaculos;
+		private double tiempoTranscurrido = 0;
 		private List<string> obstaculosDisponibles = new List<string>
 		{
 			"assets/Pulpo idle.png",
@@ -40,51 +41,51 @@ namespace SurftugaWpf
 			"assets/Pajaro idle.png"
 		};
 
+		// Constructor e inicialización
 		public MainWindow()
 		{
 			InitializeComponent();
+			ConfigurarJuego();
+		}
 
-
-			// Habilitar doble búfer para reducir parpadeos
+		private void ConfigurarJuego()
+		{
 			RenderOptions.SetBitmapScalingMode(FondoMovimiento, BitmapScalingMode.HighQuality);
 			RenderOptions.SetEdgeMode(FondoMovimiento, EdgeMode.Aliased);
 			RenderOptions.SetBitmapScalingMode(GameCanvas, BitmapScalingMode.HighQuality);
 			RenderOptions.SetEdgeMode(GameCanvas, EdgeMode.Aliased);
-		
 
-			// Configurar el temporizador de animación
 			animationTimer = new DispatcherTimer();
-			animationTimer.Interval = TimeSpan.FromMilliseconds(500); // Cambiar cada 500ms
+			animationTimer.Interval = TimeSpan.FromMilliseconds(500);
 			animationTimer.Tick += AnimationTimer_Tick;
 			animationTimer.Start();
 
-			// Usar CompositionTarget.Rendering para animaciones suaves
 			CompositionTarget.Rendering += OnRendering;
 
+			InicializarSonidos();
+		}
+
+		private void InicializarSonidos()
+		{
 			try
 			{
-				// Inicializar MediaPlayer para el sonido de fondo
 				backgroundMediaPlayer = new MediaPlayer();
 				backgroundMediaPlayer.Open(new Uri("assets/seaSound.mp3", UriKind.Relative));
 				backgroundMediaPlayer.Volume = 1;
 				backgroundMediaPlayer.Play();
-
-				// Configurar el sonido en bucle
 				backgroundMediaPlayer.MediaEnded += (sender, e) =>
 				{
-					backgroundMediaPlayer.Position = TimeSpan.Zero; // Reiniciar el sonido
+					backgroundMediaPlayer.Position = TimeSpan.Zero;
 					backgroundMediaPlayer.Play();
 				};
 
-				// Inicializar MediaPlayer para el sonido de salto
 				jumpMediaPlayer = new MediaPlayer();
 				jumpMediaPlayer.Open(new Uri("assets/tortugaSalto.mp3", UriKind.Relative));
-				jumpMediaPlayer.Volume = 0.2; // Ajusta el volumen si es necesario
+				jumpMediaPlayer.Volume = 0.2;
 
-				// Inicializar MediaPlayer para la canción de fondo
 				songMediaPlayer = new MediaPlayer();
 				songMediaPlayer.Open(new Uri("assets/song.mp3", UriKind.Relative));
-				songMediaPlayer.Volume = 0.2; // Ajusta el volumen si es necesario
+				songMediaPlayer.Volume = 0.2;
 			}
 			catch (Exception ex)
 			{
@@ -92,62 +93,42 @@ namespace SurftugaWpf
 			}
 		}
 
+		// Lógica del juego
 		private void OnRendering(object sender, EventArgs e)
 		{
-			if (!isGameRunning) return; // No ejecutar la lógica del juego si no está en ejecución
+			if (!isGameRunning) return;
 
-			// Obtener el tiempo transcurrido desde el último fotograma
-			double deltaTime = 16; // Aproximadamente 16ms por fotograma (60 FPS)
-
-			// Mover el fondo
+			double deltaTime = 16;
 			MoverFondo(deltaTime);
-
-			// Generar obstáculos
 			GenerarObstaculos(deltaTime);
-
-			// Mover obstáculos
 			MoverObstaculos(deltaTime);
 
-			// Incrementar la puntuación cada segundo (1000ms)
 			tiempoAcumuladoPuntuacion += deltaTime;
-			if (tiempoAcumuladoPuntuacion >= 1000) // Cada 1000ms (1 segundo)
+			if (tiempoAcumuladoPuntuacion >= 1000)
 			{
-				puntuacion += 1; // Aumentar la puntuación en 5 puntos cada segundo
+				puntuacion += 1;
 				ActualizarPuntuacion();
-				tiempoAcumuladoPuntuacion = 0; // Reiniciar el contador
+				tiempoAcumuladoPuntuacion = 0;
 			}
-		}
-
-		private void ActualizarPuntuacion()
-		{
-			// Actualizar el TextBlock con la puntuación actual
-			PuntuacionText.Text = $"SCORE: {puntuacion}";
 		}
 
 		private void MoverFondo(double deltaTime)
 		{
-			// Incrementar la velocidad del fondo
 			velocidadFondo += incrementoVelocidad;
-
-			// Mover ambas imágenes
 			double newLeft1 = Canvas.GetLeft(FondoImage1) - velocidadFondo;
 			double newLeft2 = Canvas.GetLeft(FondoImage2) - velocidadFondo;
 
 			Canvas.SetLeft(FondoImage1, newLeft1);
 			Canvas.SetLeft(FondoImage2, newLeft2);
 
-			// Obtener el ancho real de las imágenes
 			double imageWidth = FondoImage1.ActualWidth;
 
-			// Reposicionar las imágenes cuando salgan completamente de la pantalla
 			if (newLeft1 + imageWidth <= 0)
 			{
-				// Colocar FondoImage1 a la derecha de FondoImage2
 				Canvas.SetLeft(FondoImage1, newLeft2 + imageWidth);
 			}
 			if (newLeft2 + imageWidth <= 0)
 			{
-				// Colocar FondoImage2 a la derecha de FondoImage1
 				Canvas.SetLeft(FondoImage2, newLeft1 + imageWidth);
 			}
 		}
@@ -158,33 +139,26 @@ namespace SurftugaWpf
 
 			if (tiempoTranscurrido >= tiempoEntreObstaculos)
 			{
-				// Seleccionar un obstáculo aleatorio de la lista
 				string obstaculoAleatorio = obstaculosDisponibles[random.Next(obstaculosDisponibles.Count)];
 				SpawnObstaculo(obstaculoAleatorio);
 
-				// Generar un nuevo tiempo aleatorio entre obstáculos
 				tiempoEntreObstaculos = random.Next(tiempoEntreObstaculosMin, tiempoEntreObstaculosMax);
-
-				// Reiniciar el contador
 				tiempoTranscurrido = 0;
 			}
 		}
 
 		private void MoverObstaculos(double deltaTime)
 		{
-			// Obtener la posición X de la tortuga
 			double tortugaX = Canvas.GetLeft(TortugaImage);
 
-			// Mover todos los obstáculos en el Canvas
 			foreach (var child in GameCanvas.Children.OfType<Image>().ToList())
 			{
 				if (child.Source.ToString().Contains("Pulpo") || child.Source.ToString().Contains("Tiburon") || child.Source.ToString().Contains("Pajaro"))
 				{
 					double left = Canvas.GetLeft(child);
-					Canvas.SetLeft(child, left - 10); // Mover x píxeles a la izquierda
+					Canvas.SetLeft(child, left - 10);
 
-					// Cambiar la imagen si el obstáculo está cerca de la tortuga
-					if (left < tortugaX + 400) // Umbral de proximidad
+					if (left < tortugaX + 400)
 					{
 						if (child.Source.ToString().Contains("Pulpo idle.png"))
 						{
@@ -200,7 +174,12 @@ namespace SurftugaWpf
 						}
 					}
 
-					// Si el obstáculo sale de la pantalla, eliminarlo
+					if (DetectColision(TortugaImage, child))
+					{
+						GameOver();
+						return;
+					}
+
 					if (left + child.Width < 0)
 					{
 						GameCanvas.Children.Remove(child);
@@ -209,76 +188,91 @@ namespace SurftugaWpf
 			}
 		}
 
+		private bool DetectColision(Image tortuga, Image obstaculo)
+		{
+			double tortugaLeft = Canvas.GetLeft(tortuga);
+			double tortugaTop = Canvas.GetTop(tortuga);
+			double tortugaWidth = tortuga.ActualWidth * 0.8;
+			double tortugaHeight = tortuga.ActualHeight * 0.8;
+
+			double obstaculoLeft = Canvas.GetLeft(obstaculo);
+			double obstaculoTop = Canvas.GetTop(obstaculo);
+			double obstaculoWidth = obstaculo.ActualWidth * 0.8;
+			double obstaculoHeight = obstaculo.ActualHeight * 0.8;
+
+			bool colisionX = tortugaLeft + tortugaWidth * 0.2 < obstaculoLeft + obstaculoWidth * 0.8 &&
+							 tortugaLeft + tortugaWidth * 0.8 > obstaculoLeft + obstaculoWidth * 0.2;
+
+			bool colisionY = tortugaTop + tortugaHeight * 0.2 < obstaculoTop + obstaculoHeight * 0.8 &&
+							 tortugaTop + tortugaHeight * 0.8 > obstaculoTop + obstaculoHeight * 0.2;
+
+			return colisionX && colisionY;
+		}
+
+		// Eventos y acciones del jugador
 		private void Window_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter && !isGameRunning) // Solo iniciar si el juego no está en ejecución
+			if (e.Key == Key.Enter && !isGameRunning && GameOverScene.Visibility != Visibility.Visible)
 			{
-				// Reiniciar la puntuación
-				puntuacion = 0;
-				ActualizarPuntuacion();
-
-				// Cambiar entre las escenas
-				MenuScene.Visibility = Visibility.Hidden; // Oculta el menú
-				GameScene.Visibility = Visibility.Visible; // Muestra el fondo del juego
-
-				// Iniciar el juego
-				isGameRunning = true;
-				animationTimer.Start(); // Iniciar el temporizador de animación
-
-				songMediaPlayer.Play(); // Reproducir la canción de fondo
-				// Configurar la canción en bucle
-				songMediaPlayer.MediaEnded += (sender, e) =>
-				{
-					songMediaPlayer.Position = TimeSpan.Zero; // Reiniciar la canción
-					songMediaPlayer.Play();
-				};
-				// Generar el primer obstáculo manualmente
-				SpawnObstaculo("assets/Pulpo idle.png");
-
-				// Reiniciar el contador de tiempo
-				tiempoTranscurrido = 0;
-
-				// Generar un nuevo tiempo aleatorio entre obstáculos
-				tiempoEntreObstaculos = random.Next(tiempoEntreObstaculosMin, tiempoEntreObstaculosMax);
-
-				GameScene.UpdateLayout();
-				TortugaImage.UpdateLayout();
-
-				// Capturar la posición de la tortuga una vez visible
-				originalYPosition = Canvas.GetTop(TortugaImage);
+				IniciarJuego();
 			}
 
-			// Detectar el salto
-			if (e.Key == Key.Space && canJump)
+			if (e.Key == Key.Space && canJump && isGameRunning)
 			{
 				PerformJump();
 			}
 		}
 
+		private void IniciarJuego()
+		{
+			puntuacion = 0;
+			ActualizarPuntuacion();
+
+			MenuScene.Visibility = Visibility.Hidden;
+			GameScene.Visibility = Visibility.Visible;
+
+			isGameRunning = true;
+			animationTimer.Start();
+
+			songMediaPlayer.Play();
+			songMediaPlayer.MediaEnded += (sender, e) =>
+			{
+				songMediaPlayer.Position = TimeSpan.Zero;
+				songMediaPlayer.Play();
+			};
+
+			SpawnObstaculo("assets/Pulpo idle.png");
+
+			tiempoTranscurrido = 0;
+			tiempoEntreObstaculos = random.Next(tiempoEntreObstaculosMin, tiempoEntreObstaculosMax);
+
+			GameScene.UpdateLayout();
+			TortugaImage.UpdateLayout();
+
+			originalYPosition = Canvas.GetTop(TortugaImage);
+		}
+
 		private void PerformJump()
 		{
-			canJump = false; // No permitir otro salto hasta terminar el enfriamiento
+			if (!isGameRunning) return;
 
-			// Reproducir sonido de salto
-			jumpMediaPlayer.Position = TimeSpan.Zero; // Reiniciar el sonido en caso de que esté en uso
+			canJump = false;
+			jumpMediaPlayer.Position = TimeSpan.Zero;
 			jumpMediaPlayer.Play();
 
-			// Cambiar la imagen a la de salto
 			TortugaImage.Source = new BitmapImage(new Uri("assets/Tortuga salto.png", UriKind.Relative));
-
-			// Mover la tortuga hacia arriba (salto normal)
 			Canvas.SetTop(TortugaImage, originalYPosition - 160);
 
-			// Regresar después de 0.8 segundos
 			DispatcherTimer jumpTimer = new DispatcherTimer();
 			jumpTimer.Interval = TimeSpan.FromMilliseconds(800);
 			jumpTimer.Tick += (sender, e) =>
 			{
-				Canvas.SetTop(TortugaImage, originalYPosition); // Regresa a la posición inicial
-																// Restaurar la imagen a la de reposo
+				if (!isGameRunning) return;
+
+				Canvas.SetTop(TortugaImage, originalYPosition);
 				TortugaImage.Source = new BitmapImage(new Uri("assets/Tortuga idle.png", UriKind.Relative));
 				jumpTimer.Stop();
-				StartCooldown(); // Iniciar enfriamiento
+				StartCooldown();
 			};
 			jumpTimer.Start();
 		}
@@ -286,13 +280,128 @@ namespace SurftugaWpf
 		private void StartCooldown()
 		{
 			cooldownTimer = new DispatcherTimer();
-			cooldownTimer.Interval = TimeSpan.FromMilliseconds(6); // Enfriamiento de 0.6 segundo
+			cooldownTimer.Interval = TimeSpan.FromMilliseconds(6);
 			cooldownTimer.Tick += (sender, e) =>
 			{
-				canJump = true; // Permitir saltar de nuevo
+				canJump = true;
 				cooldownTimer.Stop();
 			};
 			cooldownTimer.Start();
+		}
+
+		// Finalización del juego
+		private void GameOver()
+		{
+			isGameRunning = false;
+			animationTimer.Stop();
+			CompositionTarget.Rendering -= OnRendering;
+
+			songMediaPlayer.Stop();
+
+			MediaPlayer muerteMediaPlayer = new MediaPlayer();
+			muerteMediaPlayer.Open(new Uri("assets/muerte.mp3", UriKind.Relative));
+			muerteMediaPlayer.Volume = 1;
+			muerteMediaPlayer.Play();
+
+			TortugaImage.Source = new BitmapImage(new Uri("assets/Tortuga salto.png", UriKind.Relative));
+			canJump = false;
+
+			DispatcherTimer delayTimer = new DispatcherTimer();
+			delayTimer.Interval = TimeSpan.FromSeconds(2);
+			delayTimer.Tick += (sender, e) =>
+			{
+				delayTimer.Stop();
+				MostrarPantallaGameOver();
+			};
+			delayTimer.Start();
+		}
+
+		private void MostrarPantallaGameOver()
+		{
+			GameScene.Visibility = Visibility.Hidden;
+			GameOverScene.Visibility = Visibility.Visible;
+			GameOverPuntuacionText.Text = $"SCORE: {puntuacion}";
+		}
+
+		private void ReiniciarButton_Click(object sender, RoutedEventArgs e)
+		{
+			GameOverScene.Visibility = Visibility.Hidden;
+
+			Canvas.SetLeft(TortugaImage, 50);
+			Canvas.SetTop(TortugaImage, originalYPosition);
+			TortugaImage.Source = new BitmapImage(new Uri("assets/Tortuga idle.png", UriKind.Relative));
+
+			GameCanvas.Children.Clear();
+
+			if (!GameCanvas.Children.Contains(TortugaImage))
+			{
+				GameCanvas.Children.Add(TortugaImage);
+			}
+
+			if (!GameCanvas.Children.Contains(PuntuacionText))
+			{
+				GameCanvas.Children.Add(PuntuacionText);
+			}
+
+			puntuacion = 0;
+			ActualizarPuntuacion();
+
+			isGameRunning = true;
+			canJump = true;
+			animationTimer.Start();
+			CompositionTarget.Rendering += OnRendering;
+
+			velocidadFondo = 1;
+
+			songMediaPlayer.Position = TimeSpan.Zero;
+			songMediaPlayer.Play();
+
+			SpawnObstaculo("assets/Pulpo idle.png");
+
+			tiempoTranscurrido = 0;
+			tiempoEntreObstaculos = random.Next(tiempoEntreObstaculosMin, tiempoEntreObstaculosMax);
+
+			GameScene.Visibility = Visibility.Visible;
+
+			if (cooldownTimer != null)
+			{
+				cooldownTimer.Stop();
+				cooldownTimer = null;
+			}
+
+			originalYPosition = Canvas.GetTop(TortugaImage);
+		}
+
+		// Métodos auxiliares
+		private void ActualizarPuntuacion()
+		{
+			PuntuacionText.Text = $"SCORE: {puntuacion}";
+		}
+
+		private void SpawnObstaculo(string imagenLejana)
+		{
+			Image obstaculo = new Image
+			{
+				Source = new BitmapImage(new Uri($"pack://application:,,,/{imagenLejana}", UriKind.Absolute)),
+				Width = 170,
+				Height = 170
+			};
+
+			double posicionY = 345;
+			if (imagenLejana.Contains("Pajaro"))
+			{
+				posicionY = 100;
+			}
+
+			Canvas.SetLeft(obstaculo, 900);
+			Canvas.SetTop(obstaculo, posicionY);
+			GameCanvas.Children.Add(obstaculo);
+		}
+
+		private void FondoImage_Loaded(object sender, RoutedEventArgs e)
+		{
+			Canvas.SetLeft(FondoImage1, 0);
+			Canvas.SetLeft(FondoImage2, FondoImage1.ActualWidth);
 		}
 
 		private void AnimationTimer_Tick(object sender, EventArgs e)
@@ -306,35 +415,7 @@ namespace SurftugaWpf
 				TortugaImage.Source = new BitmapImage(new Uri("assets/Tortuga idle.png", UriKind.Relative));
 			}
 
-			isIdleFrame1 = !isIdleFrame1; // Cambiar el estado
-		}
-
-		private void SpawnObstaculo(string imagenLejana)
-		{
-			Image obstaculo = new Image
-			{
-				Source = new BitmapImage(new Uri($"pack://application:,,,/{imagenLejana}", UriKind.Absolute)),
-				Width = 170,
-				Height = 170
-			};
-
-			// Posicionar el obstáculo
-			double posicionY = 345; // Posición por defecto (obstáculos submarinos)
-			if (imagenLejana.Contains("Pajaro"))
-			{
-				posicionY = 100; // Posición más alta para los pájaros
-			}
-
-			Canvas.SetLeft(obstaculo, 900);
-			Canvas.SetTop(obstaculo, posicionY);
-			GameCanvas.Children.Add(obstaculo);
-		}
-
-		private void FondoImage_Loaded(object sender, RoutedEventArgs e)
-		{
-			// Posicionar las imágenes del fondo una al lado de la otra
-			Canvas.SetLeft(FondoImage1, 0); // FondoImage1 comienza en la posición 0
-			Canvas.SetLeft(FondoImage2, FondoImage1.ActualWidth); // FondoImage2 comienza justo después de FondoImage1
+			isIdleFrame1 = !isIdleFrame1;
 		}
 	}
 }

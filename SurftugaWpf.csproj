@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\gameover.png" />
+    <None Remove="assets\GameOverBackground.png" />
+    <None Remove="assets\muerte.mp3" />
     <None Remove="assets\Pajaro ataque.png" />
     <None Remove="assets\Pajaro idle.png" />
     <None Remove="assets\PressStart2P-Regular.ttf" />
@@ -19,7 +22,6 @@
     <None Remove="assets\surftugaFondo.png" />
     <None Remove="assets\surftugaMenu.png" />
     <None Remove="assets\Tiburon Ataque.png" />
-    <None Remove="assets\Tortuga agachada.png" />
     <None Remove="assets\Tortuga idle 2.png" />
     <None Remove="assets\Tortuga idle.png" />
     <None Remove="assets\Tortuga salto.png" />
@@ -30,6 +32,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\song.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="assets\gameover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="assets\muerte.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="assets\Pajaro ataque.png">
@@ -58,9 +66,6 @@
     </Resource>
     <Resource Include="assets\Tiburon idle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="assets\Tortuga agachada.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\Tortuga idle 2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
