@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SurftugaWpf"
         mc:Ignorable="d"
         Title="SurftugaWPF" Height="540" Width="960" KeyDown="Window_KeyDown"
         ResizeMode="NoResize" WindowStyle="SingleBorderWindow"
@@ -13,6 +12,7 @@
         <!-- Recursos para los fondos -->
         <ImageBrush x:Key="MenuBackground" ImageSource="pack://application:,,,/assets/surftugaMenu.png" />
         <ImageBrush x:Key="GameBackground" ImageSource="pack://application:,,,/assets/surftugaFondo.png" />
+        <ImageBrush x:Key="GameOverBackground" ImageSource="pack://application:,,,/assets/gameOver.png" />
     </Window.Resources>
 
     <Grid KeyDown="Window_KeyDown">
@@ -32,22 +32,91 @@
             <Canvas Name="GameCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <!-- Tortuga -->
                 <Image x:Name="TortugaImage" Source="assets/Tortuga idle.png" Width="193" Height="208"
-           Canvas.Left="50" Canvas.Top="250" />
+                       Canvas.Left="50" Canvas.Top="250" />
 
                 <!-- TextBlock para mostrar la puntuación -->
                 <TextBlock x:Name="PuntuacionText" 
-           Canvas.Left="600" Canvas.Top="25" 
-           FontSize="30" FontWeight="Bold" Foreground="Yellow" 
-           FontFamily="pack://application:,,,/assets/PressStart2P-Regular.ttf#Press Start 2P" 
-           Text="SCORE: 0">
+                           Canvas.Left="600" Canvas.Top="25" 
+                           FontSize="30" FontWeight="Bold" Foreground="Yellow" 
+                           FontFamily="pack://application:,,,/assets/PressStart2P-Regular.ttf#Press Start 2P" 
+                           Text="SCORE: 0">
                     <TextBlock.Effect>
                         <DropShadowEffect ShadowDepth="0" 
-                          Color="#FFA500" 
-                          Opacity="1" 
-                          BlurRadius="5" />
+                                          Color="#FFA500" 
+                                          Opacity="1" 
+                                          BlurRadius="5" />
                     </TextBlock.Effect>
                 </TextBlock>
             </Canvas>
+        </Grid>
+
+        <!-- Pantalla de Game Over -->
+        <Grid x:Name="GameOverScene" Visibility="Hidden" Background="{StaticResource GameOverBackground}">
+            <TextBlock x:Name="GameOverPuntuacionText" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       FontSize="45" FontWeight="Bold" Foreground="Yellow" 
+                       FontFamily="pack://application:,,,/assets/PressStart2P-Regular.ttf#Press Start 2P" 
+                       Text="SCORE: 0" Margin="0,-100,0,0">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" 
+                                      Color="#FFA500" 
+                                      Opacity="1" 
+                                      BlurRadius="5" />
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <Button x:Name="ReiniciarButton" 
+        Content="RESET" 
+        HorizontalAlignment="Center" VerticalAlignment="Center" 
+        FontSize="30" FontWeight="Bold" Foreground="White" 
+        FontFamily="pack://application:,,,/assets/PressStart2P-Regular.ttf#Press Start 2P"
+        Background="Purple" BorderBrush="White" 
+        Width="250" Height="80" Padding="20" 
+        Margin="0,140,0,0" Click="ReiniciarButton_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                    Background="{TemplateBinding Background}" 
+                    BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="5" 
+                    CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Efecto al pasar el cursor por encima (hover) -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#800080" />
+                                <!-- Cambia el color de fondo -->
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFD700" />
+                                <!-- Cambia el color del borde -->
+                                <Setter TargetName="Border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                        <!-- Reduce ligeramente el tamaño -->
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Border" Property="RenderTransformOrigin" Value="0.5,0.5" />
+                            </Trigger>
+
+                            <!-- Efecto al presionar el botón -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#4B0082" />
+                                <!-- Oscurece el color de fondo -->
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FFA500" />
+                                <!-- Cambia el color del borde -->
+                                <Setter TargetName="Border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.90" ScaleY="0.90" />
+                                        <!-- Reduce más el tamaño -->
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Border" Property="RenderTransformOrigin" Value="0.5,0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
     </Grid>
 </Window>
