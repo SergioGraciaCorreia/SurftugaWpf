@@ -1,81 +1,81 @@
 SURFTUGA WPF
+🌊 Welcome to Surftuga WPF!
+This is a simple game developed in WPF (Windows Presentation Foundation) where you control a surfing turtle that must dodge obstacles while the background moves faster and faster.
 
-¡Bienvenido a Surftuga WPF! Este es un juego simple desarrollado en WPF (Windows Presentation Foundation) donde controlas a una tortuga surfera que debe esquivar obstáculos mientras el fondo se mueve cada vez más rápido.
+🎮 Game Description
+The goal of the game is to survive as long as possible by dodging randomly appearing obstacles. The background speed increases over time, making the game more challenging. Aim for the highest score!
 
-Descripción del juego
-El objetivo del juego es sobrevivir el mayor tiempo posible, esquivando obstáculos que aparecen aleatoriamente. La velocidad del fondo aumenta con el tiempo, lo que hace que el juego sea cada vez más desafiante. ¡Consigue la mayor puntuación posible!
+🛠️ Main Methods
+Here are the key methods of the game:
 
-Métodos principales
-A continuación se describen los métodos clave del juego:
+1. Initialization
+MainWindow(): Constructor for the main window. Initializes components and sets up the game.
 
-1. Inicialización
-MainWindow(): Constructor de la ventana principal. Inicializa los componentes y configura el juego.
+ConfigurarJuego(): Configures timers, rendering quality, and other initial settings.
 
-ConfigurarJuego(): Configura los temporizadores, la calidad de renderizado y otros ajustes iniciales.
+InicializarSonidos(): Initializes game sounds (background, jump, music, etc.).
 
-InicializarSonidos(): Inicializa los sonidos del juego (fondo, salto, música, etc.).
+2. Game Logic
+OnRendering(object sender, EventArgs e): Executes on each frame. Controls background movement, obstacle generation, and score updates.
 
-2. Lógica del juego
-OnRendering(object sender, EventArgs e): Método que se ejecuta en cada fotograma. Controla el movimiento del fondo, la generación de obstáculos y la actualización de la puntuación.
+MoverFondo(double deltaTime): Moves background images to create a scrolling effect.
 
-MoverFondo(double deltaTime): Mueve las imágenes del fondo para crear el efecto de desplazamiento.
+GenerarObstaculos(double deltaTime): Generates obstacles at random intervals.
 
-GenerarObstaculos(double deltaTime): Genera obstáculos en intervalos aleatorios.
+MoverObstaculos(double deltaTime): Moves obstacles to the left and checks for collisions with the turtle.
 
-MoverObstaculos(double deltaTime): Mueve los obstáculos hacia la izquierda y verifica colisiones con la tortuga.
+DetectColision(Image tortuga, Image obstaculo): Detects collisions between the turtle and obstacles.
 
-DetectColision(Image tortuga, Image obstaculo): Detecta si hay una colisión entre la tortuga y un obstáculo.
+3. Player Actions
+Window_KeyDown(object sender, KeyEventArgs e): Handles player key presses (Enter to start, Space to jump).
 
-3. Eventos y acciones del jugador
-Window_KeyDown(object sender, KeyEventArgs e): Maneja las teclas presionadas por el jugador (Enter para iniciar el juego, Espacio para saltar).
+PerformJump(): Makes the turtle jump and plays the corresponding sound.
 
-PerformJump(): Realiza el salto de la tortuga y reproduce el sonido correspondiente.
+StartCooldown(): Starts a cooldown after a jump to prevent spamming.
 
-StartCooldown(): Inicia el enfriamiento después de un salto para evitar saltos repetidos.
+4. Game Over
+GameOver(): Stops the game, plays the "death" sound, and shows the Game Over screen after a short delay.
 
-4. Finalización del juego
-GameOver(): Detiene el juego, reproduce el sonido de "muerte" y muestra la pantalla de Game Over después de un breve retraso.
+MostrarPantallaGameOver(): Displays the Game Over screen with the final score.
 
-MostrarPantallaGameOver(): Muestra la pantalla de Game Over con la puntuación final.
+ReiniciarButton_Click(object sender, RoutedEventArgs e): Restarts the game when the player clicks the "Reset" button.
 
-ReiniciarButton_Click(object sender, RoutedEventArgs e): Reinicia el juego cuando el jugador hace clic en el botón "Reset".
+5. Helper Methods
+ActualizarPuntuacion(): Updates the score text on the screen.
 
-5. Métodos auxiliares
-ActualizarPuntuacion(): Actualiza el texto de la puntuación en la pantalla.
+SpawnObstaculo(string imagenLejana): Creates and positions a new obstacle on the Canvas.
 
-SpawnObstaculo(string imagenLejana): Crea y posiciona un nuevo obstáculo en el Canvas.
+FondoImage_Loaded(object sender, RoutedEventArgs e): Positions background images when loaded.
 
-FondoImage_Loaded(object sender, RoutedEventArgs e): Posiciona las imágenes del fondo al cargarse.
+AnimationTimer_Tick(object sender, EventArgs e): Alternates between turtle animation frames.
 
-AnimationTimer_Tick(object sender, EventArgs e): Alterna entre los frames de animación de la tortuga.
+🎮 How to Play
+Start the game: Press Enter on the start screen.
 
-Cómo jugar
-Iniciar el juego: Presiona Enter en la pantalla de inicio.
+Jump: Press Space to make the turtle jump and dodge obstacles.
 
-Saltar: Presiona Espacio para hacer que la tortuga salte y esquive obstáculos.
+Reset: If you lose, click the "Reset" button to restart the game.
 
-Reiniciar: Si pierdes, haz clic en el botón "Reset" para reiniciar el juego.
+⚙️ System Requirements
+OS: Windows 7 or higher.
 
-Requisitos del sistema
-Sistema operativo: Windows 7 o superior.
+.NET Framework: Version 4.7.2 or higher.
 
-.NET Framework: Versión 4.7.2 o superior.
+Resources: Ensure resource files (images and sounds) are in the assets folder.
 
-Recursos: Asegúrate de que los archivos de recursos (imágenes y sonidos) estén en la carpeta assets.
+📂 Project Structure
+MainWindow.xaml: Contains the game's graphical interface.
 
-Estructura del proyecto
-MainWindow.xaml: Contiene la interfaz gráfica del juego.
+MainWindow.xaml.cs: Contains the game logic.
 
-MainWindow.xaml.cs: Contiene la lógica del juego.
+assets/: Folder containing images and sounds used in the game.
 
-assets/: Carpeta que contiene las imágenes y sonidos utilizados en el juego.
+🎨 Credits
+Developed by: Sergio Gracia Correia.
 
-Créditos
-Desarrollado por: Sergio Gracia Correia.
+Graphics and sound resources: Assets created by me using Aseprite and Photodraw. Sounds extracted from Pixabay.
 
-Recursos gráficos y de sonido: Los assets gráficos han sido creados por mi con Aseprite y Photodraw. Los sonidos han sido extraídos de https://pixabay.com/es/sound-effects/
+Inspiration: The game is a classic endless runner inspired by Google's Dino Game. I first made it in Unity and then ported it to WPF to learn this technology and GitHub, which I had never used before.
 
-Inspiración: El juego es un endless runner clásico inspirado en el juego del dinosaurio de Google. Lo hice en Unity primero y luego hice un port a WPF para aprender esta tecnología y  además aprender como funciona Github, que nunca lo había usado.
-
-Licencia
-Este proyecto está bajo la licencia MIT. Siéntete libre de usarlo, modificarlo y distribuirlo.
+📜 License
+This project is licensed under the MIT License. Feel free to use, modify, and distribute it.
